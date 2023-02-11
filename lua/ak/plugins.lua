@@ -1,58 +1,93 @@
 -- manage my plugins using packer.nvim plugin manager =====
+--
+-- list of plugins which should be actually installed is
+-- site-specific and provided with 'site_settings' argument.
 
-local install_path = vim.fn.stdpath( "data" ) .. "/site/pack/packer/start/packer.nvim"
+local M = {}
 
-if vim.fn.empty( vim.fn.glob( install_path ) ) > 0 then
-  vim.fn.system({
-    "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim",
-    install_path,
-  })
-  print("Installing packer; close and reopen neovim")
-  vim.cmd("packadd packer.nvim")
-end
+-- info about all the plugins which are ready to be installed
+-- (my nvim configuration is ready aware of them and is ready
+-- to configure them properly)
+local supported_plugins = {
+  -- plugin name -> arguments for packer
 
-local status_ok, packer = pcall(require, "packer")
+  ["wbthomason/packer.nvim"] = {},     -- the plugin manager itself
 
-if not status_ok then
-  vim.notity("Oops, failed to load 'packer' plugin manager")
-  return
-end
+  ["vimwiki/vimwiki"] = {},
 
-packer.startup(function(use)
-  use "wbthomason/packer.nvim"     -- the plugin manager itself
+  ["akorshkov/ak_syntax"] = {},
+  ["akorshkov/ak_vimwiki"] = {},       -- my amendments to vimwiki
 
-  use "nvim-lua/plenary.nvim"      -- library, required by many others (null-ls)
+  ["hrsh7th/nvim-cmp"] = {             -- autocompletion
+    "L3MON4D3/LuaSnip",  -- nvim-cmp requires a snippet engine. Here it is.
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-nvim-lsp",
+  },
 
-  use "vimwiki/vimwiki"
+  ["neovim/nvim-lspconfig"] = {},
+  ["williamboman/mason.nvim"] = {},    -- installer of language servers for lsp
+  ["williamboman/mason-lspconfig.nvim"] = {},  -- config lsp to use servers installed by mason
 
-  use "akorshkov/ak_syntax"
-  use "akorshkov/ak_vimwiki"       -- my amendments to vimwiki
+  ["jose-elias-alvarez/null-ls.nvim"] = {  -- helps to plug lsp formatters into lsp
+    requires = {"nvim-lua/plenary.nvim"},
+  },
 
-  use "hrsh7th/nvim-cmp"           -- autocompletion
-  use "hrsh7th/cmp-buffer"
-  use "hrsh7th/cmp-nvim-lsp"
-  use "L3MON4D3/LuaSnip"           -- nvim-cmp requires a snippet engine. Here it is.
+  ["tpope/vim-fugitive"] = {},
 
-  use "neovim/nvim-lspconfig"
-  use "williamboman/mason.nvim"    -- installer of language servers for lsp
-  use "williamboman/mason-lspconfig.nvim"  -- config lsp to use servers installed by mason
+  ["nvim-treesitter/nvim-treesitter"] = {
+    run = function()
+      -- workaround for known problem: officially suggested command ':TSUpdate'
+      -- fails on install
+      local ts_update = require('nvim-treesitter.install').update({with_sync=true})
+      ts_update()
+    end,
+  },
 
-  use "jose-elias-alvarez/null-ls.nvim"  -- helps to plug lsp formatters in lsp
+  ["nvim-telescope/telescope.nvim"] = {},   -- fuzzy finder
+  ["kyazdani42/nvim-tree.lua"] = {},   -- file manager
+  ["Einenlum/yaml-revealer"] = {},
+}
 
-  use "tpope/vim-fugitive"
+-- initialize plugin manager
+function M.setup(site_settings)
+  -- packer have to be installed always
+  local pck_path = vim.fn.stdpath( "data" ) .. "/site/pack/packer/start/packer.nvim"
 
-  use {
-    "nvim-treesitter/nvim-treesitter",
-    run = ':TSUpdate',
+  if vim.fn.empty( vim.fn.glob( pck_path ) ) > 0 then
+    vim.fn.system({
+      "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim",
+      pck_path,
+    })
+    print("Installing packer; close and reopen neovim")
+    vim.cmd("packadd packer.nvim")
+    return
+  end
+
+  -- packer installed. Use it to install all other plugins
+  local status_ok, packer = pcall(require, "packer")
+
+  if not status_ok then
+    vim.notity("Oops, failed to load 'packer' plugin manager")
+    return
+  end
+
+  local must_plugins = {
+    ["wbthomason/packer.nvim"] = true,
   }
 
-  use "nvim-telescope/telescope.nvim"   -- fuzzy finder
-  use "kyazdani42/nvim-tree.lua"   -- file manager
-  use "Einenlum/yaml-revealer"
-end)
-
--- setup installed plugins
-local nvimtree_ok, nvimtree = pcall(require, 'nvim-tree')
-if nvimtree_ok then
-  nvimtree.setup()
+  packer.startup(function(use)
+    for plugin_name, arguments in pairs(supported_plugins) do
+      if site_settings.plugins_to_install[plugin_name] or must_plugins[plugin_name] then
+        if not arguments[1] then
+          -- plugin name was not specified explicitely in arguments
+          arguments[1] = plugin_name
+        end
+        use(arguments)
+      end
+    end
+  end)
+  -- all required plugins are installed.
+  -- configuration of installed plugins is in general.lua
 end
+
+return M

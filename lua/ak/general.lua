@@ -1,5 +1,7 @@
 -- general nvim configuration  =============================
 
+local M = {}
+
 -- options   -----------------------------------------------
 for k, v in pairs {
   backup = false,                  -- do not create backup files
@@ -14,7 +16,7 @@ for k, v in pairs {
 
   virtualedit = 'block',           -- in visual mode cursor goes beyond end of line
 
-  signcolumn = 'no'                -- !!!!! experiment, will display on demand
+  signcolumn = 'no'                -- signcolumn will be display on demand
 } do
   vim.opt[k] = v
 end
@@ -52,17 +54,16 @@ local function _conf_tabs_width(if_expand, tab_width)
   end
 end
 
-vim.api.nvim_create_user_command('Ss2', function() _conf_tabs_width(true, 2) end, {})
-vim.api.nvim_create_user_command('Ss4', function() _conf_tabs_width(true, 4) end, {})
-vim.api.nvim_create_user_command('St2', function() _conf_tabs_width(false, 2) end, {})
-vim.api.nvim_create_user_command('St4', function() _conf_tabs_width(false, 4) end, {})
-vim.api.nvim_create_user_command('St8', function() _conf_tabs_width(false, 8) end, {})
+local mk_cmd = vim.api.nvim_create_user_command
+mk_cmd('Ss2', function() _conf_tabs_width(true, 2) end, {})
+mk_cmd('Ss4', function() _conf_tabs_width(true, 4) end, {})
+mk_cmd('St2', function() _conf_tabs_width(false, 2) end, {})
+mk_cmd('St4', function() _conf_tabs_width(false, 4) end, {})
+mk_cmd('St8', function() _conf_tabs_width(false, 8) end, {})
 
 
 -- filetype-specific formatting options
 -- (strange, but lsp does not do it)
-
-local crazytab = 4
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
@@ -89,11 +90,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- configure diagnostic ------------------------------------
 vim.diagnostic.config{
-  virtual_text = false,
---  signs = true,  -- always show signs column
+  virtual_text = false,  -- do not display annoying warnings all the time
 }
 
--- toggle diagnostic signcolumn ----------------------------
+-- toggle diagnostic signcolumn
 function toggle_signcolumn()
   if vim.opt_local.signcolumn:get() == 'yes' then
     vim.opt_local['signcolumn'] = 'no'
@@ -134,25 +134,35 @@ vim.keymap.set('n', '<F8>', ':cnext<CR>', {})
 vim.keymap.set('n', '<F20>', ':cprev<CR>', {})
 
 -- subsequent configuration depends on installed plugins
+function M.setup(site_settings)
 
-local nvimtree_ok, nvimtree = pcall(require, 'nvim-tree')
-if nvimtree_ok then
-  vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', {})
+  -- congig of these plugins is in separate files
+  require "ak.cmp"
+  require "ak.lsp"
+  require "ak.telescope"
+
+  -- nvim-tree plugin
+  local nvimtree_ok, nvimtree = pcall(require, 'nvim-tree')
+  if nvimtree_ok then
+    nvimtree.setup()  -- :help nvim-tree-setup
+    vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', {})
+  end
+
+  -- treesitter plugin
+  local treesitter_ok, treesitter = pcall(require, 'nvim-treesitter.configs')
+  if treesitter_ok then
+    treesitter.setup{
+      ensure_installed = { 'c', 'lua', 'vim', 'help', 'python', 'go' },
+      sync_install = false,
+      auto_install = false,
+      highlight = {
+        enable = false,
+      },
+      indent = {
+        enable = true,
+      },
+    }
+  end
 end
 
-
-local treesitter_ok, treesitter = pcall(require, 'nvim-treesitter.configs')
-if treesitter_ok then
-  treesitter.setup{
-    ensure_installed = { 'c', 'lua', 'vim', 'help', 'python', 'go' },
-    sync_install = false,
-    auto_install = false,
-    highlight = {
-      enable = false,
-    },
-    indent = {
-      enable = true,
-    },
-  }
-end
-
+return M
