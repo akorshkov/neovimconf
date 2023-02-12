@@ -19,9 +19,11 @@ local supported_plugins = {
   ["akorshkov/ak_vimwiki"] = {},       -- my amendments to vimwiki
 
   ["hrsh7th/nvim-cmp"] = {             -- autocompletion
-    "L3MON4D3/LuaSnip",  -- nvim-cmp requires a snippet engine. Here it is.
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-nvim-lsp",
+    requires = {
+      "L3MON4D3/LuaSnip",  -- nvim-cmp requires a snippet engine. Here it is.
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-nvim-lsp",
+    },
   },
 
   ["neovim/nvim-lspconfig"] = {},

@@ -50,6 +50,7 @@ cmp.setup {
   },
   completion = {
     autocomplete = false,   -- invoke autocompleteion only manually
+    completeopt = 'menu,menuone,noinsert',
   },
   mapping = {
     ['<C-n>'] = function(fallback)

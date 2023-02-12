@@ -16,7 +16,7 @@ for k, v in pairs {
 
   virtualedit = 'block',           -- in visual mode cursor goes beyond end of line
 
-  signcolumn = 'no'                -- signcolumn will be display on demand
+  signcolumn = 'no',               -- signcolumn will be display on demand
 } do
   vim.opt[k] = v
 end
