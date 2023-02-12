@@ -43,7 +43,9 @@ local supported_plugins = {
     end,
   },
 
-  ["nvim-telescope/telescope.nvim"] = {},   -- fuzzy finder
+  ["nvim-telescope/telescope.nvim"] = { -- fuzzy finder
+    requires = {"nvim-lua/plenary.nvim"},
+  },
   ["kyazdani42/nvim-tree.lua"] = {},   -- file manager
   ["Einenlum/yaml-revealer"] = {},
 }

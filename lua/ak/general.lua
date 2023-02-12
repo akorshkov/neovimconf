@@ -139,7 +139,6 @@ function M.setup(site_settings)
   -- congig of these plugins is in separate files
   require "ak.cmp"
   require "ak.lsp"
-  require "ak.telescope"
 
   -- nvim-tree plugin
   local nvimtree_ok, nvimtree = pcall(require, 'nvim-tree')
@@ -162,6 +161,17 @@ function M.setup(site_settings)
         enable = true,
       },
     }
+  end
+
+  -- telescope plugin
+  local telescope_ok, telescope = pcall(require, 'telescope')
+  if telescope_ok then
+    telescope.setup()
+
+    local builtin = require('telescope.builtin')
+    vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+    vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+    vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
   end
 end
 
