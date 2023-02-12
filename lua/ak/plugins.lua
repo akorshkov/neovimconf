@@ -50,6 +50,11 @@ local supported_plugins = {
 
 -- initialize plugin manager
 function M.setup(site_settings)
+  if not site_settings.plugins_to_install then
+    -- looks like site_settings not initialized, skip plugins processing
+    return
+  end
+
   -- packer have to be installed always
   local pck_path = vim.fn.stdpath( "data" ) .. "/site/pack/packer/start/packer.nvim"
 

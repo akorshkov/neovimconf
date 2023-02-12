@@ -19,11 +19,10 @@ end
 
 -- pre-process site_settings
 if site_settings.plugins_to_install then
-  -- elements in form:
-  --   ["plugin/name"] = some_options,
-  -- have precedence over:
-  --   "plugin/name",
-  -- the second one is a synonim of:
+  -- elements of this table may be in one of two forms:
+  --   ["plugin/name"] = some_options,  -- form 1
+  --   "plugin/name",                   -- form 2
+  -- Transfer elements in form 2 to equivalent:
   --   ["plugin/name"] = true,
   local plugins_to_install = {}
   for plugin_name, options in pairs(site_settings.plugins_to_install) do
