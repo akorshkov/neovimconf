@@ -50,7 +50,11 @@ cmp.setup {
   },
   completion = {
     autocomplete = false,   -- invoke autocompleteion only manually
-    completeopt = 'menu,menuone,noinsert',
+
+    -- do not use it! conflicts with 'auto-select-first-element'
+    -- functionality implemented in <C-n> mapping function.
+    --
+    -- completeopt = 'menu,menuone,noinsert',
   },
   mapping = {
     ['<C-n>'] = function(fallback)
@@ -58,6 +62,12 @@ cmp.setup {
         cmp.select_next_item()
       else
         cmp.complete()
+        -- some kind of workaround to select first item
+        if cmp.visible() then
+          vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes('<C-j>', true, true, true),
+            'm', true)
+        end
       end
     end,
     ['<Tab>'] = cmp.mapping.select_next_item(),
