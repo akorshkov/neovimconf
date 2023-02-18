@@ -62,12 +62,11 @@ cmp.setup {
         cmp.select_next_item()
       else
         cmp.complete()
-        -- some kind of workaround to select first item
-        if cmp.visible() then
-          vim.api.nvim_feedkeys(
-            vim.api.nvim_replace_termcodes('<C-j>', true, true, true),
-            'm', true)
-        end
+        -- workaroud for issue #1448
+        vim.wait(500, function()
+          return cmp.visible()
+        end)
+        cmp.select_next_item()
       end
     end,
     ['<Tab>'] = cmp.mapping.select_next_item(),
