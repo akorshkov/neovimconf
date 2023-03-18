@@ -6,6 +6,7 @@
 
 site_settings.plugins_to_install = {
   "nvim-treesitter/nvim-treesitter",
+  "nvim-treesitter/playground",
 
   -- "vimwiki/vimwiki",
 
