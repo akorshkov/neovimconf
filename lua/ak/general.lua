@@ -34,6 +34,19 @@ vim.cmd "highlight SpellBad term=reverse ctermbg=224 ctermfg=6 gui=undercurl gui
 vim.cmd "highlight SpellRare term=reverse ctermbg=225 ctermfg=2 gui=undercurl guisp=Magenta"
 vim.cmd "highlight SpellCap term=reverse ctermbg=4 ctermfg=3 gui=undercurl guisp=Blue"
 
+-- statusline ----------------------------------------------
+local statusline = {
+  "%-3.3n ",                         -- buffer number
+  "%f ",                             -- file name
+  "%h%m%r%w",                        -- status flag
+  "[%{strlen(&ft)?&ft:'none'}] ",    -- file type
+  "%=",                              -- right align remainder
+  "0x%-8B ",                         -- character value
+  "%-10(%l,%c%V%) ",                 -- cursor position
+  "%<%P",                            -- file position
+}
+
+vim.api.nvim_set_option('statusline', table.concat(statusline))
 
 -- commands to specify tab width and behavior  -------------
 -- tabstop        - how tab character looks
@@ -132,6 +145,33 @@ vim.keymap.set('n', '<F7>', ':lnext<CR>', {})
 vim.keymap.set('n', '<F19>', ':lprev<CR>', {})
 vim.keymap.set('n', '<F8>', ':cnext<CR>', {})
 vim.keymap.set('n', '<F20>', ':cprev<CR>', {})
+
+-- helper commands to report syntax group on current cursor position
+function syn_stack()
+  local syn_names = {}
+  for _, syn_id in ipairs(vim.fn.synstack(vim.fn.line('.'), vim.fn.col('.'))) do
+    local syn_name = syn_id .. "." .. vim.fn.synIDattr(syn_id, 'name')
+    table.insert(syn_names, syn_name)
+  end
+  -- not sure what is going on here and if names are correct
+  -- looks like from now on highlight groups are listed
+  local hl_names = {}
+  local hl_id = vim.fn.synID(vim.fn.line('.'), vim.fn.col('.'), 1)
+  while true do
+    local hl_name = hl_id .. '.' .. vim.fn.synIDattr(hl_id, 'name')
+    table.insert(hl_names, hl_name)
+    local next_hl_id = vim.fn.synIDtrans(hl_id)
+    if next_hl_id == hl_id then break end
+    hl_id = next_hl_id
+  end
+
+  local result = "syntax: [" .. table.concat(syn_names, ", ") .. "]"
+  result = result .. ' => ' .. table.concat(hl_names, " -> ")
+  print(result)
+end
+
+vim.keymap.set('n', '<leader><F12>', ':lua syn_stack()<CR>', {silent=true})
+vim.keymap.set('n', '<F12>', ':syntax sync fromstart<CR>', {silent=true})
 
 -- subsequent configuration depends on installed plugins
 function M.setup(site_settings)
