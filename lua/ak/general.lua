@@ -2,7 +2,7 @@
 
 local M = {}
 
--- options   -----------------------------------------------
+-- vim options   -------------------------------------------
 for k, v in pairs {
   backup = false,                  -- do not create backup files
   mouse = "",                      -- mouse clicks do not move vim cursor
@@ -22,17 +22,21 @@ for k, v in pairs {
 end
 
 
--- variables  ----------------------------------------------
+-- vim variables  ------------------------------------------
 vim.g.mapleader = ','
 vim.g.maplocalleader = '\\'
 
 
 -- color scheme. Probably there is a better way?  ----------
-vim.cmd "colorscheme torte"
-vim.cmd "highlight Search term=reverse ctermbg=3 ctermfg=0 guibg=Gold2"
-vim.cmd "highlight SpellBad term=reverse ctermbg=224 ctermfg=6 gui=undercurl guisp=Red"
-vim.cmd "highlight SpellRare term=reverse ctermbg=225 ctermfg=2 gui=undercurl guisp=Magenta"
-vim.cmd "highlight SpellCap term=reverse ctermbg=4 ctermfg=3 gui=undercurl guisp=Blue"
+local status_ok, err = pcall(vim.cmd, "colorscheme ak_colors")
+if not status_ok then
+  -- use one of standard color schemes
+  vim.cmd "colorscheme torte"
+  vim.cmd "highlight Search term=reverse ctermbg=3 ctermfg=0 guibg=Gold2"
+  vim.cmd "highlight SpellBad term=reverse ctermbg=224 ctermfg=6 gui=undercurl guisp=Red"
+  vim.cmd "highlight SpellRare term=reverse ctermbg=225 ctermfg=2 gui=undercurl guisp=Magenta"
+  vim.cmd "highlight SpellCap term=reverse ctermbg=4 ctermfg=3 gui=undercurl guisp=Blue"
+end
 
 -- statusline ----------------------------------------------
 local statusline = {
@@ -85,7 +89,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt.softtabstop = 4
     vim.opt.tabstop = 4
     vim.opt.expandtab = false
-    -- vim.opt.signcolumn = true
   end,
 })
 
@@ -96,7 +99,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt.softtabstop = 4
     vim.opt.tabstop = 4
     vim.opt.expandtab = true
-    -- vim.opt.signcolumn = true
   end,
 })
  

@@ -39,8 +39,6 @@ local on_attach = function(client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.format({async=true})<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
 
---  vim.opt_local.signcolumn = "no"  -- show signcolumn even if there are no diagnostic messages
-
   if client.name ~= 'pyright' then
     -- don't want to re-format all the existing python projects
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>FF', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
@@ -48,9 +46,7 @@ local on_attach = function(client, bufnr)
 end
 
 -- the language servers I will use
--- local lsp_servers = { 'pyright', 'gopls' }
-local lsp_servers = { 'jedi_language_server', 'gopls' }
--- local lsp_servers = { 'pyright', 'gopls' }
+local lsp_servers = { 'jedi_language_server', 'gopls', 'lua_ls' }
 
 for _, s in ipairs(lsp_servers) do
   nvim_lsp[s].setup {

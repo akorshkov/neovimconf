@@ -5,18 +5,9 @@
 
 local M = {}
 
--- info about all the plugins which are ready to be installed
--- (my nvim configuration is ready aware of them and is ready
--- to configure them properly)
-local supported_plugins = {
+-- default non-trivial arguments for installing pluging I usually use.
+local default_plugin_options = {
   -- plugin name -> arguments for packer
-
-  ["wbthomason/packer.nvim"] = {},     -- the plugin manager itself
-
-  ["vimwiki/vimwiki"] = {},
-
-  ["akorshkov/ak_syntax"] = {},
-  ["akorshkov/ak_vimwiki"] = {},       -- my amendments to vimwiki
 
   ["hrsh7th/nvim-cmp"] = {             -- autocompletion
     requires = {
@@ -26,15 +17,12 @@ local supported_plugins = {
     },
   },
 
-  ["neovim/nvim-lspconfig"] = {},
-  ["williamboman/mason.nvim"] = {},    -- installer of language servers for lsp
-  ["williamboman/mason-lspconfig.nvim"] = {},  -- config lsp to use servers installed by mason
-
-  ["jose-elias-alvarez/null-ls.nvim"] = {  -- helps to plug lsp formatters into lsp
+  ["jose-elias-alvarez/null-ls.nvim"] = {  -- lsp-server interface for misc external tools
+    config = function ()
+      require("null-ls").setup()
+    end,
     requires = {"nvim-lua/plenary.nvim"},
   },
-
-  ["tpope/vim-fugitive"] = {},
 
   ["nvim-treesitter/nvim-treesitter"] = {
     run = function()
@@ -44,13 +32,10 @@ local supported_plugins = {
       ts_update()
     end,
   },
-  ["nvim-treesitter/playground"] = {},
 
   ["nvim-telescope/telescope.nvim"] = { -- fuzzy finder
     requires = {"nvim-lua/plenary.nvim"},
   },
-  ["kyazdani42/nvim-tree.lua"] = {},   -- file manager
-  ["Einenlum/yaml-revealer"] = {},
 }
 
 -- initialize plugin manager
@@ -82,21 +67,51 @@ function M.setup(site_settings)
   end
 
   local must_plugins = {
-    ["wbthomason/packer.nvim"] = true,
+    "wbthomason/packer.nvim",
   }
 
   packer.startup(function(use)
-    for plugin_name, arguments in pairs(supported_plugins) do
-      if site_settings.plugins_to_install[plugin_name] or must_plugins[plugin_name] then
-        if not arguments[1] then
-          -- plugin name was not specified explicitely in arguments
-          arguments[1] = plugin_name
-        end
-        use(arguments)
+    -- process configured list of lugins to install
+    -- items in site_settings.plugins_to_install may contain options for plugin installation
+    local plugins_to_install = {}
+    for key, value in pairs(site_settings.plugins_to_install) do
+      local plugin_name
+      local packer_args
+      if type(key) == "number" then
+        -- this is just a name of plugin, w/o options
+        plugin_name = value
+        packer_args = false
+      else
+        plugin_name = key
+        packer_args = value
+      end
+      plugins_to_install[plugin_name] = packer_args
+    end
+
+    -- include always required plugins
+    for _, plugin_name in ipairs(must_plugins) do
+      if not plugins_to_install[plugin_name] then
+        plugins_to_install[plugin_name] = false
       end
     end
+
+    -- specify default args for plugins to install
+    for plugin_name, packer_args in pairs(plugins_to_install) do
+      if type(packer_args) == "boolean" then
+        -- options for the plugin were not specified explicitely. Use dafaults.
+        packer_args = default_plugin_options[plugin_name] or {}
+      end
+
+      if not packer_args[1] then
+        -- First element of packer_args table should be the plugin name.
+        -- Not specified, use default.
+        packer_args[1] = plugin_name
+      end
+
+      use(packer_args)
+    end
   end)
-  -- all required plugins are installed.
+  -- all selected plugins are installed.
   -- configuration of installed plugins is in general.lua
 end
 
