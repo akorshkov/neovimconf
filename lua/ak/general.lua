@@ -137,6 +137,18 @@ vim.keymap.set('v', '<', '<gv', {})
 -- highlight (not search!) current word
 vim.keymap.set('n', '+', ':match RedrawDebugComposed /\\<<C-R><C-W>\\>/<CR>', {})
 
+-- toggle match trailing blank and mixes of tabs/spaces
+vim.keymap.set('n', 'm ', ':lua ToggleBadSpacesHl()<CR>', {silent=true})
+
+function ToggleBadSpacesHl()
+  if not vim.b.akTrailingHl then
+    vim.b.akTrailingHl = vim.fn.matchadd("ErrorMsg", "\\t \\| \\t\\|\\s\\+$")
+  else
+    vim.fn.matchdelete(vim.b.akTrailingHl)
+    vim.b.akTrailingHl = nil
+  end
+end
+
 -- hotkeys for quick-fix window
 -- F17 = Shift+F5, etc.
 vim.keymap.set('n', '<F5>', ':lopen<CR>', {})
