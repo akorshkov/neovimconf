@@ -13,11 +13,11 @@ Site_settings.plugins_to_install = {
   -- "nvim-treesitter/nvim-treesitter",
   -- "nvim-treesitter/playground",
 
-  -- "akorshkov/vim-akn",
-  -- "akorshkov/vim-ak-colors",
+  -- "akorshkov/akn-filetype.vim",
+  -- "akorshkov/ak-colors.vim",
   -- "vimwiki/vimwiki",
 
-  -- "akorshkov/ak_syntax",
+  -- "akorshkov/ak-syntax.vim",
   -- "akorshkov/ak_vimwiki",       -- my amendments to vimwiki
 
   -- "hrsh7th/nvim-cmp",           -- autocompletion
