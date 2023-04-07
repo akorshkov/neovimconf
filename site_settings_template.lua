@@ -23,14 +23,37 @@ Site_settings.plugins_to_install = {
   -- "hrsh7th/nvim-cmp",           -- autocompletion
 
   "neovim/nvim-lspconfig",
-  -- "williamboman/mason.nvim",    -- installer of language servers for lsp
+  -- "williamboman/mason.nvim",    -- installer of misc third-party tools used by nvim
   -- "williamboman/mason-lspconfig.nvim",  -- config lsp to use servers installed by mason
 
   -- "jose-elias-alvarez/null-ls.nvim",  -- helps to plug lsp formatters into lsp
+  -- "jay-babu/mason-null-ls.nvim", -- helps to install tools to be used by null-ls
 
   -- "tpope/vim-fugitive",
 
   -- "nvim-telescope/telescope.nvim",   -- fuzzy finder
   "kyazdani42/nvim-tree.lua",        -- file manager
   -- "Einenlum/yaml-revealer",
+}
+
+-- lsp servers to be installed (using mason and mason-lspconfig plugins)
+-- lsp servers are not part of nvim. But these servers will be installed in
+-- nvim data directory. Are supposed to be used by nvim only and shoud not
+-- affect rest of the system.
+--
+-- mason-lspconfig.nvim is required to install these servers.
+--
+-- (the table may conain names, or names/settings:  ["name"] = {settings}
+Site_settings.lsp_servers = {
+  -- 'jedi_language_server',
+  -- 'gopls',
+  -- 'lua_ls',
+}
+
+-- Tools, which are not lsp servers, but perform some lsp-related tasks
+-- These tools will be used as sources for null-ls plugin.
+-- These tools will be installed by mason-null-ls plugin.
+Site_settings.lsp_tools = {
+  -- 'black',  -- formatter for python
+  -- 'stylua', -- formatter for lua
 }

@@ -73,20 +73,8 @@ function M.setup(site_settings)
   packer.startup(function(use)
     -- process configured list of lugins to install
     -- items in site_settings.plugins_to_install may contain options for plugin installation
-    local plugins_to_install = {}
-    for key, value in pairs(site_settings.plugins_to_install) do
-      local plugin_name
-      local packer_args
-      if type(key) == "number" then
-        -- this is just a name of plugin, w/o options
-        plugin_name = value
-        packer_args = false
-      else
-        plugin_name = key
-        packer_args = value
-      end
-      plugins_to_install[plugin_name] = packer_args
-    end
+    local plugins_to_install = require("ak.setup_tools").unfold_config_table(
+      site_settings.plugins_to_install)
 
     -- include always required plugins
     for _, plugin_name in ipairs(must_plugins) do

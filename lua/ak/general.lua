@@ -190,9 +190,9 @@ vim.keymap.set('n', '<F12>', ':syntax sync fromstart<CR>', {silent=true})
 -- subsequent configuration depends on installed plugins
 function M.setup(site_settings)
 
-  -- congig of these plugins is in separate files
+  -- config of these plugins is in separate files
   require "ak.cmp"
-  require "ak.lsp"
+  require("ak.lsp").setup(site_settings)
 
   -- nvim-tree plugin
   local nvimtree_ok, nvimtree = pcall(require, 'nvim-tree')
