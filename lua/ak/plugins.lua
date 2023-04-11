@@ -25,6 +25,7 @@ local default_plugin_options = {
   },
 
   ["nvim-treesitter/nvim-treesitter"] = {
+    -- !!! treesitter configuration is located in general.lua !!!
     run = function()
       -- workaround for known problem: officially suggested command ':TSUpdate'
       -- fails on install

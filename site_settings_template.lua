@@ -48,6 +48,7 @@ Site_settings.lsp_servers = {
   -- 'jedi_language_server',
   -- 'gopls',
   -- 'lua_ls',
+  -- 'rust_analyzer',
 }
 
 -- Tools, which are not lsp servers, but perform some lsp-related tasks

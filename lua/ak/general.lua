@@ -101,7 +101,16 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt.expandtab = true
   end,
 })
- 
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lua",
+  callback = function()
+    vim.opt.shiftwidth = 2
+    vim.opt.softtabstop = 2
+    vim.opt.tabstop = 2
+    vim.opt.expandtab = true
+  end,
+})
 
 -- configure diagnostic ------------------------------------
 vim.diagnostic.config{
@@ -205,7 +214,7 @@ function M.setup(site_settings)
   local treesitter_ok, treesitter = pcall(require, 'nvim-treesitter.configs')
   if treesitter_ok then
     treesitter.setup{
-      ensure_installed = { 'c', 'lua', 'vim', 'help', 'python', 'go' },
+      ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'query', 'python', 'go' },
       sync_install = false,
       auto_install = false,
       highlight = {
