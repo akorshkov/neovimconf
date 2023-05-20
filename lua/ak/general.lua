@@ -236,6 +236,13 @@ function M.setup(site_settings)
     vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
     vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
   end
+
+  -- akn plugin
+  local akn_ok, akn = pcall(require, 'akn')
+  if akn_ok then
+    akn.setup()
+  end
+
 end
 
 return M
