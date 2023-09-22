@@ -169,14 +169,21 @@ function ToggleBadSpacesHl()
 end
 
 -- hotkeys for quick-fix window
--- F17 = Shift+F5, etc.
+-- Different code for "Shift+F5" combination on different terminals. No idea why.
+-- Possible options: <F17> and <s-F5>
+-- Type these keys in nvim to find out correct code for current terminal:
+--    <Ctrl-v>{desired key combination}
 vim.keymap.set('n', '<F5>', ':lopen<CR>', {})
+vim.keymap.set('n', '<s-F5>', ':lclose<CR>', {})
 vim.keymap.set('n', '<F17>', ':lclose<CR>', {})
 vim.keymap.set('n', '<F6>', ':copen<CR>', {})
+vim.keymap.set('n', '<s-F6>', ':cclose<CR>', {})
 vim.keymap.set('n', '<F18>', ':cclose<CR>', {})
 vim.keymap.set('n', '<F7>', ':lnext<CR>', {})
+vim.keymap.set('n', '<s-F7>', ':lprev<CR>', {})
 vim.keymap.set('n', '<F19>', ':lprev<CR>', {})
 vim.keymap.set('n', '<F8>', ':cnext<CR>', {})
+vim.keymap.set('n', '<s-F8>', ':cprev<CR>', {})
 vim.keymap.set('n', '<F20>', ':cprev<CR>', {})
 
 -- helper commands to report syntax group on current cursor position
