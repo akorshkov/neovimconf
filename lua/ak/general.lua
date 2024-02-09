@@ -78,6 +78,13 @@ mk_cmd('St2', function() _conf_tabs_width(false, 2) end, {})
 mk_cmd('St4', function() _conf_tabs_width(false, 4) end, {})
 mk_cmd('St8', function() _conf_tabs_width(false, 8) end, {})
 
+-- implement Kman - command which prints my small cheat-sheet
+local function _do_kman()
+  require("ak.kman").print_my_help()
+end
+
+mk_cmd('Kman', function() _do_kman() end, {})
+
 
 -- filetype-specific formatting options
 -- (strange, but lsp does not do it)
