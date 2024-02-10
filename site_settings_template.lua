@@ -58,3 +58,11 @@ Site_settings.lsp_tools = {
   -- 'black',  -- formatter for python
   -- 'stylua', -- formatter for lua
 }
+
+-- site-specific settings of tabs behavior
+-- key: filetype
+-- value: {"s" or "t", tab_size}
+Site_settings.tabs_config = {
+  -- python = {"s", 4},
+  -- go = {"t", 4},
+}

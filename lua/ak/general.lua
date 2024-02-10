@@ -78,56 +78,20 @@ mk_cmd('St2', function() _conf_tabs_width(false, 2) end, {})
 mk_cmd('St4', function() _conf_tabs_width(false, 4) end, {})
 mk_cmd('St8', function() _conf_tabs_width(false, 8) end, {})
 
+-- filetype-specific tabs options
+local tabs_config = {
+  python = {"s", 4},
+  go = {"t", 4},
+  cs = {"t", 4},
+  lua = {"s", 2},
+}
+
 -- implement Kman - command which prints my small cheat-sheet
 local function _do_kman()
   require("ak.kman").print_my_help()
 end
 
 mk_cmd('Kman', function() _do_kman() end, {})
-
-
--- filetype-specific formatting options
--- (strange, but lsp does not do it)
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "go",
-  callback = function()
-    vim.opt.shiftwidth = 4
-    vim.opt.softtabstop = 4
-    vim.opt.tabstop = 4
-    vim.opt.expandtab = false
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "cs",
-  callback = function()
-    vim.opt.shiftwidth = 4
-    vim.opt.softtabstop = 4
-    vim.opt.tabstop = 4
-    vim.opt.expandtab = false
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "python",
-  callback = function()
-    vim.opt.shiftwidth = 4
-    vim.opt.softtabstop = 4
-    vim.opt.tabstop = 4
-    vim.opt.expandtab = true
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "lua",
-  callback = function()
-    vim.opt.shiftwidth = 2
-    vim.opt.softtabstop = 2
-    vim.opt.tabstop = 2
-    vim.opt.expandtab = true
-  end,
-})
 
 -- configure diagnostic ------------------------------------
 vim.diagnostic.config{
@@ -222,6 +186,28 @@ vim.keymap.set('n', '<F12>', ':syntax sync fromstart<CR>', {silent=true})
 
 -- subsequent configuration depends on installed plugins
 function M.setup(site_settings)
+
+  -- configure tabs for misc filetypes
+  if site_settings.tabs_config then
+    -- read site-specific tabs settings if any
+    for filetype, tab_opts in pairs(site_settings.tabs_config) do
+      tabs_config[filetype] = tab_opts
+    end
+  end
+  for filetype, tab_opts in pairs(tabs_config) do
+    local expandtab = tab_opts[1] == 's'
+    local tabsize = tab_opts[2]
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = filetype,
+      callback = function()
+        vim.opt.shiftwidth = tabsize
+        vim.opt.softtabstop = tabsize
+        vim.opt.tabstop = tabsize
+        vim.opt.expandtab = expandtab
+      end
+    })
+  end
 
   -- config of these plugins is in separate files
   require "ak.cmp"
