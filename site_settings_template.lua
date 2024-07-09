@@ -4,17 +4,24 @@
 -- template; it's modification would not affect anything. Copy it
 -- to 'site_settings.lua' before doing any modifications.
 
--- plugins_to_install - table of plugins to install
--- Plugins will be installed by Packer.
+-- plugins_to_install - installation arguments of plugins to install
+-- Plugins will be installed by Packer and most plugins do not require
+-- any installation arguments.
+--
 -- Packer arguments for each plugin may be specified, but in most cases
 -- it is not required - default arguments for plugins I usually use are
 -- specified in lua/ak/plugins.lua.
+--
+-- But configuration of installed plugins is still required. (usually it means
+-- that 'setup' method must be called). Initialization code is
+-- located in lua/ak/general.lua
 Site_settings.plugins_to_install = {
   -- "nvim-treesitter/nvim-treesitter",
   -- "nvim-treesitter/playground",
 
-  -- "akorshkov/akn-filetype.vim",
   -- "akorshkov/ak-colors.vim",
+  -- "akorshkov/kmantopic-filetype.nvim"
+  -- "akorshkov/akn-filetype.vim",
   -- "vimwiki/vimwiki",
 
   -- "akorshkov/ak-syntax.vim",

@@ -86,13 +86,6 @@ local tabs_config = {
   lua = {"s", 2},
 }
 
--- implement Kman - command which prints my small cheat-sheet
-local function _do_kman()
-  require("ak.kman").print_my_help()
-end
-
-mk_cmd('Kman', function() _do_kman() end, {})
-
 -- configure diagnostic ------------------------------------
 vim.diagnostic.config{
   virtual_text = false,  -- do not display annoying warnings all the time
@@ -251,6 +244,12 @@ function M.setup(site_settings)
   local akn_ok, akn = pcall(require, 'akn')
   if akn_ok then
     akn.setup()
+  end
+
+  -- kmantopic plugin
+  local kmantopic_ok, kmantopic = pcall(require, 'kmantopic')
+  if kmantopic_ok then
+    kmantopic.setup()
   end
 
 end
