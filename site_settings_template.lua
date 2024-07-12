@@ -20,7 +20,7 @@ Site_settings.plugins_to_install = {
   -- "nvim-treesitter/playground",
 
   -- "akorshkov/ak-colors.vim",
-  -- "akorshkov/kmantopic-filetype.nvim"
+  -- "akorshkov/kmantopic-filetype.nvim",
   -- "akorshkov/akn-filetype.vim",
   -- "vimwiki/vimwiki",
 
@@ -73,3 +73,6 @@ Site_settings.tabs_config = {
   -- python = {"s", 4},
   -- go = {"t", 4},
 }
+
+-- usually I do not want vim to respect settings from .editorconfig file
+Site_settings.use_editorconfig = false

@@ -25,3 +25,6 @@ require("ak.plugins").setup(site_settings)
 
 -- configure installed plugins and everything else
 require("ak.general").setup(site_settings)
+
+-- should vim respect settings from .editorconfig file
+vim.g.editorconfig = site_settings.use_editorconfig

@@ -24,6 +24,10 @@ local default_lsp_tools_settings = {
   },
 }
 
+-- to prevent change of colorscheme by lsp server
+local on_init = function(client, _)
+  client.server_capabilities.semanticTokensProvider = nil
+end
 
 -- keyboard mappings for all lsp servers
 local opts = { noremap = true, silent = false }
@@ -83,7 +87,7 @@ local function ensure_lsp_servers(site_lsp_servers)
     return
   end
 
-  mason = get_mason_plugin()
+  local mason = get_mason_plugin()
 
   if mason == nil then
     print("WARNING: can't install lsp servers, 'mason' plugin is required")
@@ -117,6 +121,7 @@ local function ensure_lsp_servers(site_lsp_servers)
     end
     nvim_lsp[server_name].setup {
       on_attach = on_attach,
+      on_init = on_init,
       settings = setup_settings
     }
   end
@@ -191,8 +196,6 @@ local function ensure_null_ls_tools(site_lsp_tools)
 
   null_ls.setup { sources = sources }
 end
-
-
 
 
 function M.setup(site_settings)
