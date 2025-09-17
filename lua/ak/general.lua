@@ -26,6 +26,8 @@ end
 vim.g.mapleader = ','
 vim.g.maplocalleader = '\\'
 
+-- set notermguicolors  - temporary, until not my color scheme is not adapted for gui colors
+vim.opt.termguicolors = false
 
 -- color scheme. Probably there is a better way?  ----------
 local status_ok, err = pcall(vim.cmd, "colorscheme ak_colors")
@@ -190,7 +192,7 @@ function M.setup(site_settings)
   for filetype, tab_opts in pairs(tabs_config) do
     local expandtab = tab_opts[1] == 's'
     local tabsize = tab_opts[2]
-
+    -- TODO: use augroup here and clear it first
     vim.api.nvim_create_autocmd("FileType", {
       pattern = filetype,
       callback = function()
@@ -203,7 +205,7 @@ function M.setup(site_settings)
   end
 
   -- config of these plugins is in separate files
-  require "ak.cmp"
+  require "ak.cmp"  -- auto-completion using nvim-cmp plugin
   require("ak.lsp").setup(site_settings)
 
   -- nvim-tree plugin

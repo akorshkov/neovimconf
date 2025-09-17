@@ -26,7 +26,7 @@ local default_lsp_tools_settings = {
 
 -- to prevent change of colorscheme by lsp server
 local on_init = function(client, _)
-  client.server_capabilities.semanticTokensProvider = nil
+  -- client.server_capabilities.semanticTokensProvider = nil
 end
 
 -- keyboard mappings for all lsp servers
@@ -43,7 +43,7 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl',
-  '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
@@ -67,7 +67,12 @@ local function make_mason_plugin_getter()
     local status, mason = pcall(require, "mason")
     checked = true
     if status then
-      mason.setup()
+      mason.setup({
+        registries = {  -- !!! need it to install "roslyn" lsp server
+          "github:mason-org/mason-registry",
+          "github:Crashdummyy/mason-registry",
+        }
+      })
       result = mason
     else
       result = nil
@@ -82,10 +87,12 @@ local get_mason_plugin = make_mason_plugin_getter()
 -- install all lsp servers specified in site_settings.lsp_servers
 -- "mason" and "mason-lspconfig" are used to do it
 local function ensure_lsp_servers(site_lsp_servers)
-  if next(site_lsp_servers) == nil then
-    -- no lsp servers to install
-    return
-  end
+
+-- !!! uncomment
+--  if next(site_lsp_servers) == nil then
+--    -- no lsp servers to install
+--    return
+--  end
 
   local mason = get_mason_plugin()
 
@@ -94,6 +101,7 @@ local function ensure_lsp_servers(site_lsp_servers)
     return
   end
 
+  -- !!! note - is used only as a 
   local status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
   if not status_ok then
     print("WARNING: can't install lsp servers, 'mason-lspconfig' plugin is required")
@@ -102,29 +110,52 @@ local function ensure_lsp_servers(site_lsp_servers)
 
   local lsp_servers = require("ak.setup_tools").unfold_config_table(site_lsp_servers)
 
+--  local mason_registry = require("mason-registry")
+--  local mason_installer = require("mason.installer")
+--
   local lsp_servers_names = {}
   for server_name, _ in pairs(lsp_servers) do
+--    if not mason_registry.is_installed(server_name) then
+--      mason_installer.install(server_name)
+--    end
+
     table.insert(lsp_servers_names, server_name)
   end
 
-  -- install required lsp servers
+  -- install required lsp servers   -- !!! will try to get rid of it
   mason_lspconfig.setup {
     ensure_installed = lsp_servers_names
   }
 
-  -- configure lsp servers
-  local nvim_lsp = require('lspconfig')
+--  if true then
+--    return
+--  end
 
-  for server_name, setup_settings in pairs(lsp_servers) do
-    if type(setup_settings) == "boolean" then
-      setup_settings = default_servers_settings[server_name] or {}
-    end
-    nvim_lsp[server_name].setup {
-      on_attach = on_attach,
-      on_init = on_init,
-      settings = setup_settings
-    }
-  end
+
+  -- configure lsp servers
+--  local nvim_lsp = require('lspconfig')
+--
+--  for server_name, setup_settings in pairs(lsp_servers) do
+--    if type(setup_settings) == "boolean" then
+--      setup_settings = default_servers_settings[server_name] or {}
+--    end
+--
+--    nvim_lsp[server_name].setup {
+--      on_attach = on_attach,
+--      on_init = on_init,
+--      settings = setup_settings
+--    }
+--  end
+
+  vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('my.lsp', {}),
+    callback = function(args)
+      local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+      on_attach(client, args.buf)
+    end,
+  })
+
+
 end
 
 
