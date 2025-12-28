@@ -202,56 +202,6 @@ function M.setup(site_settings)
     })
   end
 
-  -- config of these plugins is in separate files
-  require "ak.cmp"
-  require("ak.lsp").setup(site_settings)
-
-  -- nvim-tree plugin
-  local nvimtree_ok, nvimtree = pcall(require, 'nvim-tree')
-  if nvimtree_ok then
-    nvimtree.setup()  -- :help nvim-tree-setup
-    vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', {})
-  end
-
-  -- treesitter plugin
-  local treesitter_ok, treesitter = pcall(require, 'nvim-treesitter.configs')
-  if treesitter_ok then
-    treesitter.setup{
-      ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'query', 'python', 'go' },
-      sync_install = false,
-      auto_install = false,
-      highlight = {
-        enable = false,
-      },
-      indent = {
-        enable = true,
-      },
-    }
-  end
-
-  -- telescope plugin
-  local telescope_ok, telescope = pcall(require, 'telescope')
-  if telescope_ok then
-    telescope.setup()
-
-    local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-    vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-  end
-
-  -- akn plugin
-  local akn_ok, akn = pcall(require, 'akn')
-  if akn_ok then
-    akn.setup()
-  end
-
-  -- kmantopic plugin
-  local kmantopic_ok, kmantopic = pcall(require, 'kmantopic')
-  if kmantopic_ok then
-    kmantopic.setup()
-  end
-
 end
 
 return M

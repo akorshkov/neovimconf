@@ -15,6 +15,6 @@ Installation:
 
 4. Inspect/modify this file, start nvim and run:
 
-	`:PackerSync`
+	`:Lazy`
 
-to install selected plugins.
+to check the status of the selected plugins.

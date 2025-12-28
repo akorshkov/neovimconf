@@ -1,5 +1,3 @@
--- my neovim configuration
-
 -- Read local settings
 -- Local settings are different on different installations, so the file
 -- with local settings is not commited
@@ -20,11 +18,16 @@ end
 local site_settings = Site_settings
 Site_settings = nil
 
--- install plugins selected in Site_settings
+-- install and plugins selected in Site_settings
 require("ak.plugins").setup(site_settings)
 
--- configure installed plugins and everything else
+-- configure everything else
 require("ak.general").setup(site_settings)
+
+-- configure lsp
+require("ak.lsp").setup(site_settings)
 
 -- should vim respect settings from .editorconfig file
 vim.g.editorconfig = site_settings.use_editorconfig
+
+vim.opt.termguicolors = false

@@ -2,68 +2,51 @@
 --
 -- If name of this file is 'site_settings_template.lua' then it is just a
 -- template; it's modification would not affect anything. Copy it
--- to 'site_settings.lua' before doing any modifications.
+-- to 'site_settings.lua' before doing any modifications
 
--- plugins_to_install - installation arguments of plugins to install
--- Plugins will be installed by Packer and most plugins do not require
--- any installation arguments.
---
--- Packer arguments for each plugin may be specified, but in most cases
--- it is not required - default arguments for plugins I usually use are
--- specified in lua/ak/plugins.lua.
---
--- But configuration of installed plugins is still required. (usually it means
--- that 'setup' method must be called). Initialization code is
--- located in lua/ak/general.lua
+-- path to local plugins (used if plugin in plugins_to_install has dev=true)
+Site_settings.plugins_dev_path = "~/Projects/vim_plugins"
+
+-- Just uncomment plugins you want to be installed.
+-- Configuration of these plugins (if such configuration is required) is
+-- performed in lua/ak/plugins.lua
 Site_settings.plugins_to_install = {
-  -- "nvim-treesitter/nvim-treesitter",
-  -- "nvim-treesitter/playground",
+  -- either "plugin_name" or ["plugin_name"]={lazy opts}
 
-  -- "akorshkov/ak-colors.vim",
-  -- "akorshkov/kmantopic-filetype.nvim",
-  -- "akorshkov/akn-filetype.vim",
-  -- "vimwiki/vimwiki",
+  --["akorshkov/akn-filetype.vim"] = {
+  --  dev = true,
+  --},
+  --["akorshkov/ak-colors.vim"] = {
+  --  dev = true,
+  --},
+  --["akorshkov/kmantopic-filetype.nvim"] = {
+  --  dev = true,
+  --  opts = {},
+  --},
 
-  -- "akorshkov/ak-syntax.vim",
-  -- "akorshkov/ak_vimwiki",       -- my amendments to vimwiki
+  "tpope/vim-fugitive",
 
-  -- "hrsh7th/nvim-cmp",           -- autocompletion
+  -- autocompletion
+  --"hrsh7th/nvim-cmp",
 
-  "neovim/nvim-lspconfig",
-  -- "williamboman/mason.nvim",    -- installer of misc third-party tools used by nvim
-  -- "williamboman/mason-lspconfig.nvim",  -- config lsp to use servers installed by mason
+  -- installer of misc tools such as lsp servers
+  --["mason-org/mason.nvim"] = {
+  --  opts = {},
+  --},
 
-  -- "jose-elias-alvarez/null-ls.nvim",  -- helps to plug lsp formatters into lsp
-  -- "jay-babu/mason-null-ls.nvim", -- helps to install tools to be used by null-ls
-
-  -- "tpope/vim-fugitive",
-
-  -- "nvim-telescope/telescope.nvim",   -- fuzzy finder
-  "kyazdani42/nvim-tree.lua",        -- file manager
-  -- "Einenlum/yaml-revealer",
+  --"neovim/nvim-lspconfig",
 }
 
--- lsp servers to be installed (using mason and mason-lspconfig plugins)
--- lsp servers are not part of nvim. But these servers will be installed in
--- nvim data directory. Are supposed to be used by nvim only and shoud not
--- affect rest of the system.
---
--- mason-lspconfig.nvim is required to install these servers.
---
--- (the table may conain names, or names/settings:  ["name"] = {settings}
 Site_settings.lsp_servers = {
-  -- 'jedi_language_server',
-  -- 'gopls',
-  -- 'lua_ls',
-  -- 'rust_analyzer',
-}
+  -- also need to install the LSP server. Can use jedi-language-server in Mason
+  --"jedi_language_server",
 
--- Tools, which are not lsp servers, but perform some lsp-related tasks
--- These tools will be used as sources for null-ls plugin.
--- These tools will be installed by mason-null-ls plugin.
-Site_settings.lsp_tools = {
-  -- 'black',  -- formatter for python
-  -- 'stylua', -- formatter for lua
+  -- also need to install the LSP server. Can use lua-language-server in Mason
+  --"lua_ls",
+
+  -- roslyn_ls - check https://github.com/neovim/nvim-lspconfig/blob/master/lsp/roslyn_ls.lua
+  -- for installation instructions
+  --"roslyn_ls",
 }
 
 -- site-specific settings of tabs behavior

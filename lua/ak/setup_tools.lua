@@ -12,7 +12,7 @@ M.unfold_config_table = function(src_table)
     if type(key) == "number" then
       -- corresponds to just a name, value is not specified
       entry_name = value
-      entry_value = false
+      entry_value = true
     else
       entry_name = key
       entry_value = value
