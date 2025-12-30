@@ -24,15 +24,17 @@ Site_settings.plugins_to_install = {
   --  opts = {},
   --},
 
-  "tpope/vim-fugitive",
+  -- git plugin
+  --"tpope/vim-fugitive",
 
   -- autocompletion
   --"hrsh7th/nvim-cmp",
 
   -- installer of misc tools such as lsp servers
-  --["mason-org/mason.nvim"] = {
-  --  opts = {},
-  --},
+  --"mason-org/mason.nvim",
+
+  -- plugin required for LSP server for c#.
+  --"seblyng/roslyn.nvim",
 
   --"neovim/nvim-lspconfig",
 }
@@ -44,9 +46,19 @@ Site_settings.lsp_servers = {
   -- also need to install the LSP server. Can use lua-language-server in Mason
   --"lua_ls",
 
-  -- roslyn_ls - check https://github.com/neovim/nvim-lspconfig/blob/master/lsp/roslyn_ls.lua
-  -- for installation instructions
-  --"roslyn_ls",
+  -- C# LSP. To use this LSP it is necessary to:
+  -- 1. install the LSP server. The only working installation instructions are to use Mason.
+  --  So, install Mason, run :Mason, install "roslyn" LSP.
+  --  (Mason has to be configured to use additional registry
+  --  "github:Crashdummyy/mason-registry", it is done in this package)
+  -- 2. install "seblyng/roslyn.nvim" plugin
+  --"roslyn",
+
+  -- roslyn_ls - C# roslyn LSP configuration provided by nvim-lspconfig.
+  -- Unfortunately installation instructions
+  -- https://github.com/neovim/nvim-lspconfig/blob/master/lsp/roslyn_ls.lua
+  -- would not work. Do not use it.
+  -- !do not use it! "roslyn_ls",
 }
 
 -- site-specific settings of tabs behavior

@@ -15,6 +15,15 @@ local default_plugin_options = {
       "hrsh7th/cmp-nvim-lsp",
     },
   },
+
+  ["mason-org/mason.nvim"] = {
+    opts = {
+      registries = {
+        "github:mason-org/mason-registry",
+        "github:Crashdummyy/mason-registry",
+      }
+    }
+  },
 }
 
 local function prepare_plugin_spec(plugin_name, settings_spec, dflt_spec)
