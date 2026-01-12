@@ -84,6 +84,7 @@ local tabs_config = {
   go = {"t", 4},
   cs = {"t", 4},
   lua = {"s", 2},
+  akn = {"s", 2},
 }
 
 -- configure diagnostic ------------------------------------
@@ -177,13 +178,15 @@ end
 vim.keymap.set('n', '<leader><F12>', ':lua syn_stack()<CR>', {silent=true})
 vim.keymap.set('n', '<F12>', ':syntax sync fromstart<CR>', {silent=true})
 
+
 -- subsequent configuration depends on installed plugins
 function M.setup(site_settings)
 
   -- configure tabs for misc filetypes
-  if site_settings.tabs_config then
+  local settings_tabs_config = site_settings.tabs_config or {}
+  if settings_tabs_config then
     -- read site-specific tabs settings if any
-    for filetype, tab_opts in pairs(site_settings.tabs_config) do
+    for filetype, tab_opts in pairs(settings_tabs_config) do
       tabs_config[filetype] = tab_opts
     end
   end

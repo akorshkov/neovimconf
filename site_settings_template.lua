@@ -64,9 +64,15 @@ Site_settings.lsp_servers = {
 -- site-specific settings of tabs behavior
 -- key: filetype
 -- value: {"s" or "t", tab_size}
+-- It is possible to add records for other filetypes.
 Site_settings.tabs_config = {
-  -- python = {"s", 4},
-  -- go = {"t", 4},
+  -- default values are:
+  --
+  --python = {"s", 4},
+  --go = {"t", 4},
+  --cs = {"t", 4},
+  --lua = {"s", 2},
+  --akn = {"s", 2},
 }
 
 -- usually I do not want vim to respect settings from .editorconfig file
