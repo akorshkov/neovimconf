@@ -182,6 +182,13 @@ vim.keymap.set('n', '<F12>', ':syntax sync fromstart<CR>', {silent=true})
 -- subsequent configuration depends on installed plugins
 function M.setup(site_settings)
 
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "cs",
+    callback = function()
+      vim.opt.matchpairs:append("<:>")
+    end
+  })
+
   -- configure tabs for misc filetypes
   local settings_tabs_config = site_settings.tabs_config or {}
   if settings_tabs_config then
